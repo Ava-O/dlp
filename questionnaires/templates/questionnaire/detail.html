@@ -1,0 +1,10 @@
+{% load static %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'questionnaire/style.css' %}" />
+
+<h1>{{ questionnaire.title }}</h1>
+
+<p> {{ questionnaire.about }}</p>
+
+{% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+

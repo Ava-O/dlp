@@ -1,0 +1,28 @@
+{% load static %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'questionnaire/style.css' %}" />
+
+<h1>{{ questionnaire.title }}</h1>
+<br/>
+
+
+<form action="{% url 'questionnaires:page' questionnaire.id page.id %}" method="post">
+{% csrf_token %}
+    <ol>
+    {% for question in page.question_set.all %}
+        <li>{{ question.question_text }}</li>
+        {% for answer in question.answer_set.all %}
+            <input type="radio" name="answer{{ question.id }}" id="answer{{ forloop.counter }}" value="{{ answer.id }}"
+            required="True"/>
+            <label for="answer{{ forloop.counter }}">{{ answer.answer_text }}</label><br/>
+        {% endfor %}
+    {% endfor %}
+    </ol>
+    <input type="submit" value="Next" />
+</form>
+
+<p style="text-align: center">Your score so far is: {{ page_score }} points</p>
+
+<p>{{ request.session.page_score}}</p>
+
+{% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}

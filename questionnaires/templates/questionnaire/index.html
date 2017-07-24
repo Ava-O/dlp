@@ -1,0 +1,14 @@
+{% load static %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'questionnaire/style.css' %}" />
+
+{% if latest_questionnaire_list %}
+    <ul>
+        {% for questionnaire in latest_questionnaire_list %}
+            <li><a href="{% url 'questionnaires:first_page' questionnaire.id %}">{{ questionnaire.title }}</a><br/>
+                {{ questionnaire.about }}</li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>No questionnaires available</p>
+{% endif %}
