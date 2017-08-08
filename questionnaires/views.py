@@ -33,8 +33,6 @@ class QuestionnaireDetailView(generic.DetailView):
     #     self.request.session['visited_pages'] = []
     #     return context
     def get(self, request, *args, **kwargs):
-        import ipdb;
-        ipdb.set_trace()
         questionnaire = self.get_object()
         first_page = questionnaire.page_set.order_by('page_order').first()
         self.request.session.flush()
@@ -42,7 +40,7 @@ class QuestionnaireDetailView(generic.DetailView):
         self.request.session['best_answers'] = []
         self.request.session['visited_pages'] = []
         return HttpResponseRedirect(reverse("questionnaires:page", kwargs={"pk": questionnaire.pk,
-                                                                                 "page_pk": first_page.pk}))
+                                            "page_pk": first_page.pk}))
 
 
 class ResultsView(generic.DetailView):
@@ -107,29 +105,30 @@ class PageDetailView(generic.DetailView):
     model = Page
 
     def get(self, request, *args, **kwargs):
-        import ipdb;
-        ipdb.set_trace()
-        page = self.get_object()
-        next_page = get_next_page(page)
+
+        page = Page.objects.get(pk=kwargs['page_pk'])
         if page.page_order not in request.session['visited_pages']:
             request.session['visited_pages'].append(page.page_order)
+            request.session.modified = True
 
-        context = {'page': page, 'questionnaire': page.questionnaire, 'page_score': request.session['page_score'],
-                   'best_answers': request.session['best_answers'], 'next_page': next_page
+        context = {'page': page, 'questionnaire': page.questionnaire
                    }
 
-        if next_page.page_order <= request.session['visited_pages'][-1] + 1:
-            return render(request, 'questionnaire/page.html', context)
-        else:
-            raise Http404("Page can't be accessed")
+        return render(request, 'questionnaire/page.html', context)
+
+        # if next_page.page_order <= request.session['visited_pages'][-1] + 1:
+        #     return render(request, 'questionnaire/page.html', context)
+        # else:
+        #     raise Http404("Page can't be accessed")
 
     def post(self, request, *args, **kwargs):
-        import ipdb;
-        ipdb.set_trace()
+
         page = self.get_object()
         next_page = get_next_page(page)
         answers_list = []
         for question in page.question_set.all():
+            import ipdb;
+            ipdb.set_trace()
             selected_answers = question.answer_set.get(pk=request.POST['answer{}'.format(question.id)])
             request.session['page_score'] += selected_answers.answer_points
             answers_list.append(selected_answers)
@@ -140,9 +139,13 @@ class PageDetailView(generic.DetailView):
             if diff_q not in request.session['best_answers']:
                 request.session['best_answers'].append(diff_q)
 
+        import ipdb; ipdb.set_trace()
         if next_page:
-            return HttpResponseRedirect(
-                reverse("questionnaires:page", kwargs={"pk": next_page.questionnaire.pk, "page_pk": next_page.pk}))
+            if next_page.page_order <= request.session['visited_pages'][-1] + 1:
+                return HttpResponseRedirect(
+                    reverse("questionnaires:page", kwargs={"pk": page.questionnaire.pk, "page_pk": next_page.pk}))
+            else:
+                raise Http404("Page can't be accessed")
         else:
             return HttpResponseRedirect(
                 reverse("questionnaires:result", kwargs={"pk": page.questionnaire.pk, "page_pk": page.pk}))

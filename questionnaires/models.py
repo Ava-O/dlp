@@ -1,4 +1,7 @@
+import datetime
+
 from django.db import models
+from django.utils import timezone
 
 # Create your models here.
 
@@ -11,6 +14,9 @@ class Questionnaire(models.Model):
 
     def __str__(self):
         return "{}".format(self.title)
+
+    def was_published_recently(self):
+        return self.published_at >= timezone.now() - datetime.timedelta(days=1)
 
 
 class Page(models.Model):

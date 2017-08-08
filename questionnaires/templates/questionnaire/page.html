@@ -21,8 +21,6 @@
     <input type="submit" value="Next" />
 </form>
 
-<p style="text-align: center">Your score so far is: {{ page_score }} points</p>
-
-<p>{{ request.session.page_score}}</p>
+<p style="text-align: center">Your score so far is: {{ request.session.page_score }} points</p>
 
 {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}

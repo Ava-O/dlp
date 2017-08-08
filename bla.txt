@@ -1,0 +1,27 @@
+1. users enters index page based on the following url pattern
+   url(r'^$', views.IndexView.as_view(), name='index')
+2. IndexView class is instantiated
+3. index.html page is rendered
+4. latest questionnaires are displayed - 5 at max
+5. titlurile chestionarelor contin url-uri de tipul 
+   url(r'^(?P<pk>[0-9]+)/$', views.QuestionnaireDetailView.as_view(), name='first_page')
+6. se instantiaza clasa QuestionnaireDetailView care creaza un obiect de tip chestionar
+7. se salveaza intr-o variabila obiectul pagina cu order-ul 1	
+8. se face un redirect prin url-ul numit page avand kwargs pk-ul obiectului chestionar si
+   pk-ul primei pagini din setul de pagini corespunzator chestionarului
+9. url-ul page instantiaza clasa PageDetailView
+10. se apeleaza metoda get:
+	se instantiaza un obiect tip pagina - pk-ul corespunzator vine din argumentele 
+	url-ului
+	in context punem pagina si chestionarul corespunzator acesteia
+	se renderuie pagina page.html care are datele dinamice transmise prin request si 	 context
+11. se apeleaza metoda post:
+	se instantiaza un obiect tip pagina
+	se stabileste urmatoarea pagina
+	se creeaza o lista cu raspunsurile utilizatorului
+	etc
+	daca exista pagina urmatoare:
+		se face redirect catre url-ul page avand ca argumente pk-ul chestionarului 			si pk-ul urmatoarei pagini
+	altfel se face redirect catre url-ul result
+
+
