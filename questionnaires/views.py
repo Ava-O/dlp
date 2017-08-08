@@ -22,16 +22,6 @@ class QuestionnaireDetailView(generic.DetailView):
     model = Questionnaire
     template_name = 'questionnaire/page.html'
 
-    # def get_context_data(self, **kwargs):
-    #     context = super(QuestionnaireDetailView, self).get_context_data(**kwargs)
-    #     questionnaire = context['questionnaire']
-    #     page = questionnaire.page_set.order_by('page_order').first()
-    #     context['page'] = page
-    #     self.request.session['page_score'] = 0
-    #     context['page_score'] = 0
-    #     self.request.session['best_answers'] = []
-    #     self.request.session['visited_pages'] = []
-    #     return context
     def get(self, request, *args, **kwargs):
         questionnaire = self.get_object()
         first_page = questionnaire.page_set.order_by('page_order').first()
