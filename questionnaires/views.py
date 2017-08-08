@@ -45,7 +45,7 @@ class QuestionnaireDetailView(generic.DetailView):
 
 class ResultsView(generic.DetailView):
     model = Questionnaire
-    template_name = 'questionnaire/results.html'
+    template_name = 'questionnaire/result.html'
 
 
 def get_max_score(questionnaire):
@@ -123,7 +123,7 @@ class PageDetailView(generic.DetailView):
 
     def post(self, request, *args, **kwargs):
 
-        page = self.get_object()
+        page = Page.objects.get(pk=kwargs['page_pk'])
         next_page = get_next_page(page)
         answers_list = []
         for question in page.question_set.all():
@@ -131,13 +131,15 @@ class PageDetailView(generic.DetailView):
             ipdb.set_trace()
             selected_answers = question.answer_set.get(pk=request.POST['answer{}'.format(question.id)])
             request.session['page_score'] += selected_answers.answer_points
+            request.session.modified = True
             answers_list.append(selected_answers)
         for answer in answers_list:
-            if answer is not None:
+            if answer:
                 diff_q = get_a_question_with_wrong_answer(answers_list)
         if diff_q:
             if diff_q not in request.session['best_answers']:
                 request.session['best_answers'].append(diff_q)
+                request.session.modified = True
 
         import ipdb; ipdb.set_trace()
         if next_page:
@@ -147,8 +149,9 @@ class PageDetailView(generic.DetailView):
             else:
                 raise Http404("Page can't be accessed")
         else:
+            request.session['max_score'] = get_max_score(page.questionnaire)
             return HttpResponseRedirect(
-                reverse("questionnaires:result", kwargs={"pk": page.questionnaire.pk, "page_pk": page.pk}))
+                reverse("questionnaires:result", kwargs={"pk": page.questionnaire.pk}))
 
 
 

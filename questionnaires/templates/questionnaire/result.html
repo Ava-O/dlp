@@ -1,9 +1,9 @@
-<p>Your final score is {{ page_score }}</p>
-<p>Questionnaire max score is {{ max_score }}</p>
+<p>Your final score is {{ request.session.page_score }}</p>
+<p>Questionnaire max score is {{ request.session.max_score }}</p>
 <p>Here is a list of questions and answers that could've brought you <br/> a better score:</p>
 
-{% if best_answers %}
-    {% for item in best_answers %}
+{% if request.session.best_answers %}
+    {% for item in request.session.best_answers %}
         <p>For question number {{ item.q_number}}.{{ item.q_text }} <br/>the best answer would've been {{ item.q_best_answer }}</p>
     {% endfor %}
 {% endif %}
