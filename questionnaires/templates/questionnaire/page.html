@@ -6,7 +6,7 @@
 <br/>
 
 
-<form action="{% url 'questionnaires:page' questionnaire.id page.id %}" method="post">
+<form action="{% url 'questionnaires:page' questionnaire.id page.page_order %}" method="post">
 {% csrf_token %}
     <ol>
     {% for question in page.question_set.all %}
@@ -21,6 +21,6 @@
     <input type="submit" value="Next" />
 </form>
 
-<p style="text-align: center">Your score so far is: {{ request.session.page_score }} points</p>
+<p style="text-align: center">Your score so far is: {{ request.session.all_pages_score }} points</p>
 
 {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}

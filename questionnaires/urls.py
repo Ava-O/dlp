@@ -15,6 +15,6 @@ app_name = 'questionnaires'
 urlpatterns = [
     url(r'^$', views.IndexView.as_view(), name='index'),
     url(r'^(?P<pk>[0-9]+)/$', views.QuestionnaireDetailView.as_view(), name='first_page'),
-    url(r'^(?P<pk>[0-9]+)/page/(?P<page_pk>[0-9]+)$', views.PageDetailView.as_view(), name='page'),
+    url(r'^(?P<pk>[0-9]+)/page/(?P<page_order>[0-9]+)$', views.PageDetailView.as_view(), name='page'),
     url(r'^(?P<pk>[0-9]+)/result$', views.ResultsView.as_view(), name='result')
 ]
