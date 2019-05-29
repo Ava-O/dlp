@@ -11,7 +11,7 @@ class IndexView(generic.ListView):
     template_name = 'questionnaire/index.html'
     context_object_name = 'latest_questionnaire_list'
 
-    ''' display questionnaire list ordered by the an ascending published date'''
+    # display questionnaire list ordered by the an ascending published date
     def get_queryset(self):
         return Questionnaire.objects.filter(
             published_at__lte=timezone.now()
