@@ -102,8 +102,6 @@ class PageDetailView(generic.DetailView):
         context = {'page': page, 'questionnaire': page.questionnaire
                    }
 
-        import ipdb;
-        ipdb.set_trace()
         if page.page_order in request.session['visited_pages']:
             request.session['all_pages_score'] -= page.page_score
             page.page_score = 0
